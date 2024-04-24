@@ -77,6 +77,15 @@ class RegisterScreenState extends BaseScreenState<RegisterScreen>{
                             },
                             keyboardType: TextInputType.name,
                           ),
+                          Obx((){
+                            return Visibility(
+                              visible: registerController.emailState.isFalse,
+                              child: Container(
+                                padding: const EdgeInsets.only(top: 7),
+                                child: const Text("Please enter correct email address.", style: TextStyle(color: Colors.red),),
+                              ),
+                            );
+                          }),
                           const SizedBox(height: 15,),
                           TextFormField(
                             decoration: const InputDecoration(
@@ -90,10 +99,19 @@ class RegisterScreenState extends BaseScreenState<RegisterScreen>{
                             },
                             keyboardType: TextInputType.name,
                           ),
+                          Obx((){
+                            return Visibility(
+                              visible: registerController.usernameState.isFalse,
+                              child: Container(
+                                padding: const EdgeInsets.only(top: 7),
+                                child: const Text("Username must be at least 8 character.", style: TextStyle(color: Colors.red),),
+                              ),
+                            );
+                          }),
                           const SizedBox(height: 15,),
                           Obx(() {
                             return TextFormField(
-                              obscureText: !registerController.newPwdVisible.value,
+                              obscureText: registerController.newPwdVisible.value,
                               decoration: InputDecoration(
                                   hintText: "Create Password",
                                 suffixIcon: IconButton(
@@ -112,6 +130,15 @@ class RegisterScreenState extends BaseScreenState<RegisterScreen>{
                                 registerController.changePassword(text);
                               },
                               keyboardType: TextInputType.visiblePassword,
+                            );
+                          }),
+                          Obx((){
+                            return Visibility(
+                              visible: registerController.pwdState.isFalse,
+                              child: Container(
+                                padding: const EdgeInsets.only(top: 7),
+                                child: const Text("Your password doesn't meet minimum requirement.", style: TextStyle(color: Colors.red),),
+                              ),
                             );
                           }),
                           const SizedBox(height: 15,),
@@ -136,6 +163,15 @@ class RegisterScreenState extends BaseScreenState<RegisterScreen>{
                                 registerController.changeConfirmPassword(text);
                               },
                               keyboardType: TextInputType.visiblePassword,
+                            );
+                          }),
+                          Obx((){
+                            return Visibility(
+                              visible: registerController.pwdMatchState.isFalse,
+                              child: Container(
+                                padding: const EdgeInsets.only(top: 7),
+                                child: const Text("Confirm password doesn't match with Password", style: TextStyle(color: Colors.red),),
+                              ),
                             );
                           }),
                           const SizedBox(height: 35,),
@@ -211,6 +247,12 @@ class RegisterScreenState extends BaseScreenState<RegisterScreen>{
         ),
       )
     );
+  }
+
+  @override
+  void dispose() {
+    registerController.clearRegisterForm();
+    super.dispose();
   }
 
   void formSubmit(){
