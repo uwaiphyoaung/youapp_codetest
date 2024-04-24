@@ -8,10 +8,13 @@ import 'package:youapp_code_challenge/extensions/context_extension.dart';
 import 'package:youapp_code_challenge/extensions/date.extension.dart';
 import 'package:youapp_code_challenge/extensions/string_extension.dart';
 import 'package:youapp_code_challenge/models/profile_entity.dart';
+import 'package:youapp_code_challenge/screen/profile/add_interest_screen.dart';
 import 'package:youapp_code_challenge/screen/profile/controller/profile_controller.dart';
 import 'package:youapp_code_challenge/screen/profile/controller/requesting_profile.dart';
 import 'package:youapp_code_challenge/screen/profile/widget/profile_data_list_view.dart';
 import 'package:youapp_code_challenge/utils/util_validate.dart';
+
+import 'widget/interest_data_listview.dart';
 
 class ProfileScreen extends BaseScreen{
   const ProfileScreen({super.key});
@@ -27,11 +30,6 @@ class ProfileScreenState extends BaseScreenState<ProfileScreen>{
   void initState() {
     controller.syncLocal();
     super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
     SchedulerBinding.instance.addPostFrameCallback((_) {
       context.fetchProfile(
               (success){ controller.syncLocal(); },
@@ -46,7 +44,7 @@ class ProfileScreenState extends BaseScreenState<ProfileScreen>{
       appBar: AppBar(
         backgroundColor: const Color(0xFF09141A),
         centerTitle: true,
-        title: Obx(() => Text(controller.localProfile.value!.name.getProfileName())),
+        title: Obx(() => Text(controller.localProfile.value.getDefault().name.getProfileName())),
       ),
       backgroundColor: const Color(0xFF09141A),
       body: SafeArea(
@@ -119,7 +117,7 @@ class ProfileScreenState extends BaseScreenState<ProfileScreen>{
                                 left: 1,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-                                  child: Obx(() => Text(controller.localProfile.value!.name.getProfileName(), style: AppTextSize.mediumWhite))
+                                  child: Obx(() => Text(controller.localProfile.value.getDefault().name.getProfileName(), style: AppTextSize.mediumWhite))
                                 ),
                               )
                             ],
@@ -163,7 +161,9 @@ class ProfileScreenState extends BaseScreenState<ProfileScreen>{
                                 ],
                               ),
                               const SizedBox(height: 15,),
-                              controller.localProfile.value?.name != null && controller.clickEditAbout.isFalse?
+                              controller.localProfile.value?.birthday != null &&
+                                  controller.localProfile.value?.birthday?.isNotEmpty == true&&
+                                  controller.clickEditAbout.isFalse?
                                   ProfileDataListView()
                               : controller.clickEditAbout.isFalse?
                               const Padding(
@@ -468,7 +468,7 @@ class ProfileScreenState extends BaseScreenState<ProfileScreen>{
                                       ),
                                       child: Container(
                                         padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 15),
-                                        child: Text('Cancel', style: TextStyle(fontSize: 16),),
+                                        child: const Text('Cancel', style: TextStyle(fontSize: 16),),
                                       ),
                                     ),
                                     const SizedBox(height: 20,)
@@ -499,16 +499,19 @@ class ProfileScreenState extends BaseScreenState<ProfileScreen>{
                                   child: Text("Interest,", style: AppTextSize.mediumWhite,),
                                 ),
                                 IconButton(
-                                    onPressed: (){},
+                                    onPressed: (){
+                                      context.next(const AddInterestScreen() , callBack: (val){
+                                        if(val == "success"){
+                                          controller.syncLocal();
+                                        }
+                                      });
+                                    },
                                     icon: const Icon(Icons.edit)
                                 )
                               ],
                             ),
                             const SizedBox(height: 15,),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 15,vertical: 10),
-                              child: Text("Add in your interest to find a better match",),
-                            ),
+                            InterestDataListView(),
                             const SizedBox(height: 10,),
                           ],
                         ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:youapp_code_challenge/extensions/string_extension.dart';
 import 'package:youapp_code_challenge/screen/profile/controller/profile_controller.dart';
 
 class ProfileDataListView extends StatelessWidget{
@@ -17,7 +16,7 @@ class ProfileDataListView extends StatelessWidget{
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Visibility(
-              visible: controller.localProfile.value?.name != null,
+              visible: controller.localProfile.value?.birthday != null,
               child: Container(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Row(
@@ -25,7 +24,7 @@ class ProfileDataListView extends StatelessWidget{
                   children: [
                     const Text("Birthday:",),
                     const SizedBox(width: 5,),
-                    Text(controller.localProfile.value!.name.getProfileName(), style: TextStyle(fontSize: 16, color: Colors.white),)
+                    Text("08/08/1995 (Age 28)", style: TextStyle(fontSize: 16, color: Colors.white),)
                   ],
                 ),
               ),

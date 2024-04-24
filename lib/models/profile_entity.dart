@@ -31,3 +31,8 @@ class ProfileCreatePayload {
 
   static ProfileCreatePayload defaultProfile = ProfileCreatePayload("", "", 0, 0, []);
 }
+
+extension YAProfileData on ProfileCreatePayload?{
+
+  ProfileCreatePayload getDefault() => this??ProfileCreatePayload.defaultProfile;
+}
