@@ -11,7 +11,8 @@ import 'package:youapp_code_challenge/screen/widget/background_widget.dart';
 import 'package:youapp_code_challenge/utils/util_validate.dart';
 
 class LoginScreen extends BaseScreen{
-  const LoginScreen({super.key});
+  final Function? onLogin;
+  const LoginScreen({super.key, this.onLogin});
 
   @override
   LoginScreenState createState()=> LoginScreenState();
@@ -42,6 +43,7 @@ class LoginScreenState extends BaseScreenState<LoginScreen>{
                       ),
                       const SizedBox(height: 55,),
                       TextFormField(
+                        key: const Key('email'),
                         decoration: const InputDecoration(
                           hintText: "Enter Username/Email"
                         ),
@@ -56,6 +58,7 @@ class LoginScreenState extends BaseScreenState<LoginScreen>{
                       const SizedBox(height: 15,),
                       Obx(() {
                         return TextFormField(
+                          key: const Key('password'),
                           obscureText: !loginController.visiblePwd.value,
                           decoration: InputDecoration(
                             hintText: "Enter Password",
@@ -112,6 +115,7 @@ class LoginScreenState extends BaseScreenState<LoginScreen>{
                                 ),
                               ),
                               child: RawMaterialButton(
+                                key: const Key('login'),
                                 onPressed: formSubmit,
                                 splashColor: Colors.grey,
                                 child: const Text(
@@ -154,6 +158,7 @@ class LoginScreenState extends BaseScreenState<LoginScreen>{
 
   void formSubmit(){
     if(loginController.loginForm.isTrue){
+      FocusManager.instance.primaryFocus?.unfocus();
       context.loginAccount(
           RegisterPayload(
               loginController.loginEmail.value,
@@ -164,6 +169,9 @@ class LoginScreenState extends BaseScreenState<LoginScreen>{
             showErrorMessage(error);
           }
       );
+      if(widget.onLogin != null){
+        widget.onLogin!();
+      }
     }
   }
 }
