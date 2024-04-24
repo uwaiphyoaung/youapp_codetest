@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:youapp_code_challenge/app/api/api_response.dart';
 import 'package:youapp_code_challenge/app/constants/app.constant.dart';
@@ -23,7 +22,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(ResetState());
       final response = await service.login(event.data);
       if(response is Fail){
-        //event.context.catchError(response.error);
         emit(LoginFailState(response.error));
       }
       if(response is Success){

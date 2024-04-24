@@ -3,6 +3,16 @@ import 'package:get/get.dart';
 class AuthController extends GetxController{
 
   //Setup account registration
+  final newPwdVisible = false.obs;
+  changeNewVisible() {
+    newPwdVisible(!newPwdVisible.value);
+  }
+
+  final confirmPwdVisible = false.obs;
+  changeConfirmVisible() {
+    confirmPwdVisible(!confirmPwdVisible.value);
+  }
+
   final username = ''.obs;
   changeUserName(String? data) {
     username(data);
@@ -30,7 +40,7 @@ class AuthController extends GetxController{
   final fromValid = false.obs;
   formValidate(){
     var state =
-        email.value.length>8 &&
+        email.value.isNotEmpty &&
         username.value.length>8 &&
         checkPwd(password.value) &&
         checkPwd(confirmPassword.value) &&
@@ -45,6 +55,11 @@ class AuthController extends GetxController{
 
 
   // Login
+  final visiblePwd = false.obs;
+  changeVisible() {
+    visiblePwd(!visiblePwd.value);
+  }
+
   final loginEmail = ''.obs;
   changeLoginEmail(String? data) {
     loginEmail(data);

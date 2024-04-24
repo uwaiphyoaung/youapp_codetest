@@ -32,16 +32,14 @@ class SplashScreenState extends State<SplashScreen>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            const BgView(),
-            Center(
-              child: LoadingWidget(),
-            )
-          ],
-        ),
-      ),
+      body: Stack(
+        children: [
+          const BgView(),
+          Center(
+            child: LoadingWidget(),
+          )
+        ],
+      )
     );
   }
 

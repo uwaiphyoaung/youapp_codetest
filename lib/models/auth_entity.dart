@@ -49,7 +49,7 @@ class ErrorData {
 
   ErrorData.fromMap(Map<String, dynamic> value) {
     statusCode = value['statusCode'];
-    if(value['message'] == List<dynamic>){
+    if(value['message'] is List<dynamic>){
       message = value['message'].cast<String>();
     }else{
       message = [value['message']];

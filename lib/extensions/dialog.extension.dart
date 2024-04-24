@@ -7,6 +7,7 @@ extension AppDialog on BuildContext {
   AlertDialog showLoader() {
     return AlertDialog(
       elevation: 3,
+      backgroundColor: Colors.blueGrey,
       insetPadding:
       EdgeInsets.symmetric(horizontal: MediaQuery.of(this).size.width / 3),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),

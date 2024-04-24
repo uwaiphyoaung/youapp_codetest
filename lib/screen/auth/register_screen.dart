@@ -42,10 +42,10 @@ class RegisterScreenState extends BaseScreenState<RegisterScreen>{
                       padding: const EdgeInsets.all(15),
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Icon(Icons.chevron_left),
-                          Text("Back")
+                          Icon(Icons.chevron_left, color: Colors.white,),
+                          SizedBox(width: 5,),
+                          Text("Back", style: TextStyle(color: Colors.white, fontSize: 16),)
                         ],
                       ),
                     ),
@@ -91,25 +91,53 @@ class RegisterScreenState extends BaseScreenState<RegisterScreen>{
                             keyboardType: TextInputType.name,
                           ),
                           const SizedBox(height: 15,),
-                          TextFormField(
-                            decoration: const InputDecoration(
-                              hintText: "Create Password"
-                            ),
-                            onChanged: (text){
-                              registerController.changePassword(text);
-                            },
-                            keyboardType: TextInputType.visiblePassword,
-                          ),
+                          Obx(() {
+                            return TextFormField(
+                              obscureText: !registerController.newPwdVisible.value,
+                              decoration: InputDecoration(
+                                  hintText: "Create Password",
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    registerController.newPwdVisible.isTrue
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    color: Colors.grey,
+                                  ),
+                                  onPressed: () {
+                                    registerController.changeNewVisible();
+                                  },
+                                ),
+                              ),
+                              onChanged: (text){
+                                registerController.changePassword(text);
+                              },
+                              keyboardType: TextInputType.visiblePassword,
+                            );
+                          }),
                           const SizedBox(height: 15,),
-                          TextFormField(
-                            decoration: const InputDecoration(
-                              hintText: "Enter Confirm Password"
-                            ),
-                            onChanged: (text){
-                              registerController.changeConfirmPassword(text);
-                            },
-                            keyboardType: TextInputType.visiblePassword,
-                          ),
+                          Obx(() {
+                            return TextFormField(
+                              obscureText: !registerController.confirmPwdVisible.value,
+                              decoration: InputDecoration(
+                                  hintText: "Enter Confirm Password",
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    registerController.confirmPwdVisible.isTrue
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    color: Colors.grey,
+                                  ),
+                                  onPressed: () {
+                                    registerController.changeConfirmVisible();
+                                  },
+                                ),
+                              ),
+                              onChanged: (text){
+                                registerController.changeConfirmPassword(text);
+                              },
+                              keyboardType: TextInputType.visiblePassword,
+                            );
+                          }),
                           const SizedBox(height: 35,),
                           Obx(() {
                             return Card(

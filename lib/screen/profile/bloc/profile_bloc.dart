@@ -21,6 +21,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       emit(ResetState());
       final response = await service.create(event.data);
       if(response is Fail){
+        service.saveUserData(event.data);
         emit(ProfileCreateFailState(response.error));
       }
       if(response is Success){
@@ -33,6 +34,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       emit(ResetState());
       final response = await service.update(event.data);
       if(response is Fail){
+        service.saveUserData(event.data);
         emit(ProfileUpdateFailState(response.error));
       }
       if(response is Success){

@@ -54,18 +54,32 @@ class LoginScreenState extends BaseScreenState<LoginScreen>{
                         keyboardType: TextInputType.name,
                       ),
                       const SizedBox(height: 15,),
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          hintText: "Enter Password"
-                        ),
-                        validator: (text) {
-                          return UtilValidate.validateBasic(text);
-                        },
-                        onChanged: (text){
-                          loginController.changeLoginPassword(text);
-                        },
-                        keyboardType: TextInputType.visiblePassword,
-                      ),
+                      Obx(() {
+                        return TextFormField(
+                          obscureText: !loginController.visiblePwd.value,
+                          decoration: InputDecoration(
+                            hintText: "Enter Password",
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                loginController.visiblePwd.isTrue
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.grey,
+                              ),
+                              onPressed: () {
+                                loginController.changeVisible();
+                              },
+                            ),
+                          ),
+                          validator: (text) {
+                            return UtilValidate.validateBasic(text);
+                          },
+                          onChanged: (text){
+                            loginController.changeLoginPassword(text);
+                          },
+                          keyboardType: TextInputType.visiblePassword,
+                        );
+                      }),
                       const SizedBox(height: 35,),
                       Obx(() {
                         return Card(
