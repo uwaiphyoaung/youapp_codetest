@@ -4,14 +4,15 @@ abstract class ProfileEvent {}
 
 //Create
 class CreateProfileEvent extends ProfileEvent{
-  BuildContext context;
   ProfileCreatePayload data;
-  CreateProfileEvent(this.context,this.data);
+  CreateProfileEvent(this.data);
 }
 
 //Update
 class UpdateProfileEvent extends ProfileEvent{
-  BuildContext context;
   ProfileCreatePayload data;
-  UpdateProfileEvent(this.context,this.data);
+  UpdateProfileEvent(this.data);
 }
+
+//Fetch Data
+class FetchProfileEvent extends ProfileEvent{}

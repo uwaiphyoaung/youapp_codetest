@@ -29,4 +29,5 @@ class ProfileCreatePayload {
     interests = value['interests'].cast<String>();
   }
 
+  static ProfileCreatePayload defaultProfile = ProfileCreatePayload("", "", 0, 0, []);
 }

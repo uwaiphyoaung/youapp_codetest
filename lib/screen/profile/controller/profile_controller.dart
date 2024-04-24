@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:get/get.dart';
 import 'package:youapp_code_challenge/app/services/account_services.dart';
 import 'package:youapp_code_challenge/models/profile_entity.dart';
@@ -35,6 +37,11 @@ class ProfileController extends GetxController{
   Rxn<String> weight = Rxn<String>();
   changeWeight(String? data) {
     weight(data);
+  }
+
+  Rxn<File> profilePhoto = Rxn<File>();
+  changeProfile(File? data) {
+    profilePhoto(data);
   }
 
   Rxn<ProfileCreatePayload> localProfile = Rxn<ProfileCreatePayload>();

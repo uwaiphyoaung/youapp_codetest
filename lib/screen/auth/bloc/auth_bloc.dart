@@ -7,6 +7,7 @@ import 'package:youapp_code_challenge/app/constants/app.constant.dart';
 import 'package:youapp_code_challenge/app/services/account_services.dart';
 import 'package:youapp_code_challenge/extensions/string_extension.dart';
 import 'package:youapp_code_challenge/models/auth_entity.dart';
+import 'package:youapp_code_challenge/models/profile_entity.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -28,8 +29,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if(response is Success){
         var data = LoginResponse.fromMap(json.decode(response.data));
         if(data.access_token != null){
-          print(data.access_token);
           token = data.access_token.orEmpty();
+          var profile = ProfileCreatePayload.defaultProfile;
+          profile.name = event.data.username;
+          service.saveUserData(profile);
           emit(LoginSuccessState());
         }else{
           emit(LoginFailState(ApiError(data.message??"Something went wrong",-2)));

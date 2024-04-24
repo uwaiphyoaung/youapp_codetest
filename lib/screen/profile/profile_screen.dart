@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:youapp_code_challenge/app/base/base_screen.dart';
 import 'package:youapp_code_challenge/app/constants/app.constant.dart';
@@ -9,6 +10,7 @@ import 'package:youapp_code_challenge/extensions/string_extension.dart';
 import 'package:youapp_code_challenge/models/profile_entity.dart';
 import 'package:youapp_code_challenge/screen/profile/controller/profile_controller.dart';
 import 'package:youapp_code_challenge/screen/profile/controller/requesting_profile.dart';
+import 'package:youapp_code_challenge/screen/profile/widget/profile_data_list_view.dart';
 import 'package:youapp_code_challenge/utils/util_validate.dart';
 
 class ProfileScreen extends BaseScreen{
@@ -22,43 +24,69 @@ class ProfileScreenState extends BaseScreenState<ProfileScreen>{
   final controller = Get.put(ProfileController());
 
   @override
+  void initState() {
+    controller.syncLocal();
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      context.fetchProfile(
+              (success){ controller.syncLocal(); },
+              (fail){ showErrorMessage(fail); }
+      );
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF09141A),
+        centerTitle: true,
+        title: Obx(() => Text(controller.localProfile.value!.name.getProfileName())),
+      ),
       backgroundColor: const Color(0xFF09141A),
       body: SafeArea(
         child: Stack(
           children: [
-            Container(
-              margin: const EdgeInsets.only(top: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: (){
-                      context.back();
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(15),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Icon(Icons.chevron_left),
-                          Text("Back")
-                        ],
-                      ),
+            Visibility(
+              visible: false,
+              child:
+              Container(
+                margin: const EdgeInsets.only(top: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                        onTap: (){
+                          context.back();
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(15),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(Icons.chevron_left),
+                              Text("Back")
+                            ],
+                          ),
+                        )
+                    ),
+                    Text("@johndoe"),
+                    IconButton(
+                        onPressed: (){},
+                        icon: const Icon(Icons.more_horiz)
                     )
-                  ),
-                  Text("@johndoe"),
-                  IconButton(
-                      onPressed: (){},
-                      icon: const Icon(Icons.more_horiz)
-                  )
-                ],
+                  ],
+                ),
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 100),
+              margin: const EdgeInsets.only(top: 2),
               child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -66,7 +94,7 @@ class ProfileScreenState extends BaseScreenState<ProfileScreen>{
                     children: [
                       const SizedBox(height: 20,),
                       Card(
-                        color: Color(0xFF162329),
+                        color: const Color(0xFF162329),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
                         ),
@@ -75,20 +103,23 @@ class ProfileScreenState extends BaseScreenState<ProfileScreen>{
                           height: 200,
                           child: Stack(
                             children: [
-                              Positioned(
-                                top: 1,
-                                right: 1,
-                                child: IconButton(
-                                    onPressed: (){},
-                                    icon: const Icon(Icons.edit)
+                              Visibility(
+                                visible: false,
+                                child: Positioned(
+                                  top: 1,
+                                  right: 1,
+                                  child: IconButton(
+                                      onPressed: (){},
+                                      icon: const Icon(Icons.edit)
+                                  ),
                                 ),
                               ),
-                              const Positioned(
+                              Positioned(
                                 bottom: 1,
                                 left: 1,
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-                                  child: Text("@Johndoe123,", style: AppTextSize.mediumWhite,),
+                                  padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                                  child: Obx(() => Text(controller.localProfile.value!.name.getProfileName(), style: AppTextSize.mediumWhite))
                                 ),
                               )
                             ],
@@ -98,7 +129,7 @@ class ProfileScreenState extends BaseScreenState<ProfileScreen>{
                       const SizedBox(height: 20,),
                       Obx(() {
                         return Card(
-                          color: Color(0xFF0E191F),
+                          color: const Color(0xFF0E191F),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15.0),
                           ),
@@ -123,36 +154,52 @@ class ProfileScreenState extends BaseScreenState<ProfileScreen>{
                                   ):
                                   TextButton(
                                       onPressed: formSubmit,
-                                      child: const Text("Save & Update")
+                                      child: const Padding(
+                                        padding: EdgeInsets.only(right: 15),
+                                        child: Text("Save & Update", style: TextStyle(color: Color(
+                                            0xFFFFE2BE)),),
+                                      )
                                   )
                                 ],
                               ),
                               const SizedBox(height: 15,),
-                              controller.clickEditAbout.isFalse?
+                              controller.localProfile.value?.name != null && controller.clickEditAbout.isFalse?
+                                  ProfileDataListView()
+                              : controller.clickEditAbout.isFalse?
                               const Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 15,vertical: 10),
                                 child: Text("Add in your info to help others know you better",),
                               ):
                               Container(
-                                padding: EdgeInsets.symmetric(horizontal: 15),
+                                padding: const EdgeInsets.symmetric(horizontal: 15),
                                 child: Column(
                                   children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                          width: 70,
-                                          height: 70,
-                                          decoration: const BoxDecoration(
-                                            color: Color(0xFF09141A),
-                                            borderRadius: BorderRadius.all(Radius.circular(10))
-                                          ),
-                                          child: const Center(
-                                            child: Text("+", style: TextStyle(color: Colors.white, fontSize: 40),),
-                                          ),
-                                        ),
-                                        SizedBox(width: 15,),
-                                        Text("Add image")
-                                      ],
+                                    InkWell(
+                                      borderRadius: const BorderRadius.all(Radius.circular(20)),
+                                      onTap: pickProfileImage,
+                                      child: Row(
+                                        children: [
+                                          Obx(() {
+                                            return Container(
+                                              width: 70,
+                                              height: 70,
+                                              decoration: const BoxDecoration(
+                                                  color: Color(0xFF09141A),
+                                                  borderRadius: BorderRadius.all(Radius.circular(10))
+                                              ),
+                                              child: controller.profilePhoto.value == null?
+                                              const Center(
+                                                child: Text("+", style: TextStyle(color: Colors.white, fontSize: 40),),
+                                              ):
+                                              Image.file(controller.profilePhoto.value!,
+                                                  fit: BoxFit.cover,
+                                                  height: 70),
+                                            );
+                                          }),
+                                          const SizedBox(width: 15,),
+                                          const Text("Add image")
+                                        ],
+                                      ),
                                     ),
                                     const SizedBox(height: 15,),
                                     Row(
@@ -365,7 +412,8 @@ class ProfileScreenState extends BaseScreenState<ProfileScreen>{
                                               textAlign: TextAlign.right,
                                               keyboardType: TextInputType.number,
                                               decoration: const InputDecoration(
-                                                hintText: "Add height"
+                                                hintText: "Add height",
+                                                suffix: Text("cm")
                                               ),
                                               validator: (text) {
                                                 return UtilValidate.validateBasic(text);
@@ -395,7 +443,8 @@ class ProfileScreenState extends BaseScreenState<ProfileScreen>{
                                               textAlign: TextAlign.right,
                                               keyboardType: TextInputType.number,
                                               decoration: const InputDecoration(
-                                                hintText: "Add weight"
+                                                hintText: "Add weight",
+                                                  suffix: Text("kg")
                                               ),
                                               validator: (text) {
                                                 return UtilValidate.validateBasic(text);
@@ -408,7 +457,21 @@ class ProfileScreenState extends BaseScreenState<ProfileScreen>{
                                         )
                                       ],
                                     ),
-                                    const SizedBox(height: 30,)
+                                    const SizedBox(height: 25,),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        controller.clickEdit();
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                          shape: const StadiumBorder(),
+                                        backgroundColor: Color(0xFF09141A)
+                                      ),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 15),
+                                        child: Text('Cancel', style: TextStyle(fontSize: 16),),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 20,)
                                   ],
                                 ),
                               ),
@@ -481,5 +544,17 @@ class ProfileScreenState extends BaseScreenState<ProfileScreen>{
         }
     );
   }
+
+  Future pickProfileImage() async {
+    context.pickProfileImage(
+      (success){
+        controller.changeProfile(success);
+      },
+      (fail){
+        showError(fail);
+      }
+    );
+  }
+
 
 }

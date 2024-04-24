@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:youapp_code_challenge/app/theme/app_theme.dart';
 import 'package:youapp_code_challenge/screen/auth/bloc/auth_bloc.dart';
 import 'package:youapp_code_challenge/screen/profile/bloc/profile_bloc.dart';
 import 'package:youapp_code_challenge/screen/splash/splash_screen.dart';
-import 'package:youapp_code_challenge/theme/app_theme.dart';
 
 class YouApp extends StatefulWidget{
   const YouApp({super.key});

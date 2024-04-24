@@ -19,3 +19,12 @@ class ProfileUpdateFailState extends ProfileState{
   ApiError? error;
   ProfileUpdateFailState(this.error);
 }
+
+//profile data
+class ProfileDataSuccessState extends ProfileState{
+
+}
+class ProfileDataFailState extends ProfileState{
+  ApiError? error;
+  ProfileDataFailState(this.error);
+}

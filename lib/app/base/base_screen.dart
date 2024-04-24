@@ -36,6 +36,10 @@ class BaseScreenState<T extends BaseScreen> extends State<T> {
     snackbar.showSnackBar(buildSnackBar(message, true));
   }
 
+  void showError(String message){
+    snackbar.showSnackBar(buildSnackBar(message, false));
+  }
+
   void showErrorMessage(ApiError error){
     switch (error.code) {
       case -1:

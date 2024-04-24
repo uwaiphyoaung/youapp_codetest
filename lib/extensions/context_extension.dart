@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 
 extension AppNavigation on BuildContext {
   void replace(T) async {
-    Navigator.pushAndRemoveUntil(
+    Navigator.pushReplacement(
         this,
-        MaterialPageRoute(builder: (context) => T, maintainState: true),
-            (Route<dynamic> route) => false
+        MaterialPageRoute(builder: (context) => T),
     );
   }
 

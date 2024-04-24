@@ -29,7 +29,7 @@ class API {
     try {
       var response = await client.get(
           Uri.parse(url),
-          headers: headers);
+          headers: headerWithAuth());
       if (kDebugMode) {
         print(
             "response for these API $url -> ${response.statusCode} ${json.decode(utf8.decode(response.bodyBytes))}");
@@ -39,7 +39,7 @@ class API {
         case 201:
           return Success(response.body);
         default:
-          return Fail(ApiError("Something went wrong", response.statusCode));
+          return Fail(ApiError(response.body, response.statusCode));
       }
     } on SocketException {
       return Fail(ApiError("Connection Lost!", -1));

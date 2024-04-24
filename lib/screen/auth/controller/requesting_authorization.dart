@@ -30,7 +30,7 @@ extension AccountLogin on BuildContext {
         );
       },
     );
-    BlocProvider.of<AuthBloc>(this).add(RegisterEvent(this,data));
+    BlocProvider.of<AuthBloc>(this).add(RegisterEvent(data));
   }
 
   loginAccount(RegisterPayload data, Function loginCallback) {
@@ -55,6 +55,6 @@ extension AccountLogin on BuildContext {
         );
       },
     );
-    BlocProvider.of<AuthBloc>(this).add(LoginEvent(this,data));
+    BlocProvider.of<AuthBloc>(this).add(LoginEvent(data));
   }
 }

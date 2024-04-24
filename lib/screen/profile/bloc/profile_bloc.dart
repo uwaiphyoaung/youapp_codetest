@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:youapp_code_challenge/app/api/api_response.dart';
 import 'package:youapp_code_challenge/app/services/account_services.dart';
@@ -37,6 +38,19 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       if(response is Success){
         service.saveUserData(event.data);
         emit(ProfileUpdateSuccessState());
+      }
+    });
+
+    on<FetchProfileEvent>((event, emit) async {
+      emit(ResetState());
+      final response = await service.getProfile();
+      if(response is Fail){
+        emit(ProfileDataFailState(response.error));
+      }
+      if(response is Success){
+        var data = ProfileCreatePayload.fromMap(json.decode(response.data));
+        service.saveUserData(data);
+        emit(ProfileDataSuccessState());
       }
     });
   }
