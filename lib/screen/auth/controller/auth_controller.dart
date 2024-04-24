@@ -45,7 +45,7 @@ class AuthController extends GetxController{
   formValidate(){
     var state =
         checkEmail(email.value) &&
-        username.value.length>8 &&
+        username.value.length>= 8 &&
         checkPwd(password.value) &&
         checkPwd(confirmPassword.value) &&
         password.value == confirmPassword.value;
@@ -74,17 +74,17 @@ class AuthController extends GetxController{
     return RegExp(pattern).hasMatch(value);
   }
 
-  final emailState = false.obs;
+  final emailState = true.obs;
   validEmail(){
     emailState.value = email.value.length > 7 ? checkEmail(email.value) : true;
   }
 
-  final usernameState = false.obs;
+  final usernameState = true.obs;
   validUserName(){
     usernameState.value = username.value.isEmpty ? true : username.value.length >= 8;
   }
 
-  final pwdState = false.obs;
+  final pwdState = true.obs;
   validPwd(){
     if(password.value.isNotEmpty){
       if(password.value.length >= 8){
@@ -97,7 +97,7 @@ class AuthController extends GetxController{
     }
   }
 
-  final pwdMatchState = false.obs;
+  final pwdMatchState = true.obs;
   matchPwd(){
     if(confirmPassword.value.isNotEmpty){
       if(confirmPassword.value.length >= 8){
